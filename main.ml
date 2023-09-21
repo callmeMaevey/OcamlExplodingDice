@@ -1,7 +1,10 @@
+(* Attempting to learn OCAML *)
+
+
 let rec roll numSides=
   let curr = Random.int numSides in
   match curr with
-  6 -> curr :: roll numSides
+  | 6 -> curr :: roll numSides
   | _ -> [curr]  
  
 
@@ -27,8 +30,13 @@ let rec print_list = function
   | [] -> ()
   | e::l -> print_int e ; print_string " " ; print_list l
 
-let _ = 
-  let rollList = rollXtimes 20 in
-  print_list rollList;
+  
+let rollList = rollXtimes 3
+
+let printout input =
+  print_list input;
   print_newline ();
-  print_int (sum rollList)
+  print_int (sum input)
+
+let _ = printout rollList
+
