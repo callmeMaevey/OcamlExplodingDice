@@ -1,42 +1,40 @@
 (* Attempting to learn OCAML *)
-
-
-let rec roll numSides=
-  let curr = Random.int numSides in
-  match curr with
-  | 6 -> curr :: roll numSides
-  | _ -> [curr]  
- 
+let numSides = 6
 
 let rec sum listofRolls = 
   match listofRolls with 
+  | h :: t -> h + (sum t)
   | [] -> 0 
-  | h :: t -> h + (sum t);;
 
-let rec append (a:int list) (b: int list) : int list =
-  match a with
-  | [] -> b
-  | h::t -> h::append t b 
-
-let rec rollXtimes (x: int) : int list =
+let rec rollXtimes (x:int) : int list =
   if x = 0 then []
-  else 
-    let value : int list = roll 6 in
-    let recur : int list = rollXtimes (x-1) in
-    append value recur
+  else
+    let rec roll () =
+        let curr = ( Random.int numSides ) + 1 in
+        if curr = numSides
+        then curr :: roll ()
+        else [curr]
+    in
+    let rec prepend a b =
+      match a with
+      | h :: t -> h :: prepend t b 
+      | [] -> b
+    in
+    prepend (roll()) (rollXtimes (x - 1))
 
-
-let rec print_list = function 
-  | [] -> ()
-  | e::l -> print_int e ; print_string " " ; print_list l
-
-  
-let rollList = rollXtimes 3
-
-let printout input =
-  print_list input;
-  print_newline ();
-  print_int (sum input)
-
-let _ = printout rollList
-
+let _ =
+  Random.self_init();
+  let printResults input =
+    let rec print_list = function 
+    | [] -> ()
+    | h::t -> 
+      print_int h ;
+      print_char ' ' ;
+      print_list t
+    in
+    print_list input;
+    print_newline ();
+    print_int (sum input)
+  in
+  let rollList = rollXtimes 10 in
+  printResults rollList
